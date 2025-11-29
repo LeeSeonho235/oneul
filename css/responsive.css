@@ -1,0 +1,404 @@
+/* responsive.css - 반응형 웹 디자인 */
+
+/* 기본 반응형 설정 */
+.container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 var(--spacing-md);
+}
+
+/* 모바일 우선 접근법 */
+@media (max-width: 480px) {
+  /* 모바일 스타일 */
+  .container {
+    padding: 0 var(--spacing-sm);
+  }
+  
+  .card {
+    padding: var(--spacing-lg);
+    border-radius: 14px;
+    margin: var(--spacing-sm);
+  }
+  
+  .card h1 {
+    font-size: var(--text-xl);
+    margin-bottom: var(--spacing-md);
+  }
+  
+  /* 버튼 크기 조정 */
+  .btn {
+    padding: var(--spacing-sm) var(--spacing-md);
+    font-size: var(--text-sm);
+    min-height: 40px;
+  }
+  
+  .btn-lg {
+    padding: var(--spacing-md) var(--spacing-lg);
+    font-size: var(--text-base);
+    min-height: 48px;
+  }
+  
+  /* 폼 요소 조정 */
+  input[type="text"],
+  input[type="email"],
+  input[type="password"],
+  input[type="number"],
+  input[type="date"],
+  select,
+  textarea {
+    padding: var(--spacing-sm);
+    font-size: var(--text-sm);
+  }
+  
+  /* 그리드 조정 */
+  .grid-cols-2,
+  .grid-cols-3,
+  .grid-cols-4 {
+    grid-template-columns: 1fr;
+  }
+  
+  /* 플렉스 조정 */
+  .flex-row {
+    flex-direction: column;
+  }
+  
+  /* 텍스트 크기 조정 */
+  .text-2xl {
+    font-size: var(--text-xl);
+  }
+  
+  .text-xl {
+    font-size: var(--text-lg);
+  }
+  
+  .text-lg {
+    font-size: var(--text-base);
+  }
+  
+  /* 간격 조정 */
+  .gap-lg {
+    gap: var(--spacing-md);
+  }
+  
+  .gap-md {
+    gap: var(--spacing-sm);
+  }
+  
+  .mt-xl {
+    margin-top: var(--spacing-lg);
+  }
+  
+  .mb-xl {
+    margin-bottom: var(--spacing-lg);
+  }
+  
+  .p-xl {
+    padding: var(--spacing-lg);
+  }
+  
+  /* 인증 컨테이너 */
+  .auth-container {
+    top: var(--spacing-xs);
+    right: var(--spacing-xs);
+  }
+  
+  .auth-btn {
+    padding: var(--spacing-xs) var(--spacing-sm);
+    font-size: var(--text-xs);
+    min-height: 32px;
+  }
+  
+  /* 모달 조정 */
+  .modal-content {
+    width: 95vw;
+    margin: var(--spacing-xs);
+    border-radius: 14px;
+  }
+  
+  .modal-header,
+  .modal-body,
+  .modal-footer {
+    padding: var(--spacing-md);
+  }
+  
+  /* 체크박스/라디오 그룹 */
+  .checkbox-group,
+  .radio-group {
+    flex-direction: column;
+    gap: var(--spacing-sm);
+  }
+  
+  /* 버튼 그룹 */
+  .btn-group {
+    flex-direction: column;
+  }
+  
+  .form-actions {
+    flex-direction: column;
+  }
+}
+
+/* 태블릿 스타일 */
+@media (min-width: 481px) and (max-width: 768px) {
+  .container {
+    padding: 0 var(--spacing-md);
+  }
+  
+  .card {
+    padding: var(--spacing-xl);
+  }
+  
+  .grid-cols-3,
+  .grid-cols-4 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .grid-cols-2 {
+    grid-template-columns: 1fr;
+  }
+  
+  /* 플렉스 조정 */
+  .flex-row-md {
+    flex-direction: row;
+  }
+  
+  /* 텍스트 크기 */
+  .text-3xl {
+    font-size: var(--text-2xl);
+  }
+  
+  .text-2xl {
+    font-size: var(--text-xl);
+  }
+  
+  /* 간격 조정 */
+  .gap-xl {
+    gap: var(--spacing-lg);
+  }
+  
+  /* 인증 컨테이너 */
+  .auth-container {
+    top: var(--spacing-sm);
+    right: var(--spacing-sm);
+  }
+  
+  /* 모달 조정 */
+  .modal-content {
+    width: 90vw;
+    max-width: 500px;
+  }
+  
+  /* 체크박스/라디오 그룹 */
+  .checkbox-group,
+  .radio-group {
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+}
+
+/* 데스크톱 스타일 */
+@media (min-width: 769px) {
+  .container {
+    padding: 0 var(--spacing-lg);
+  }
+  
+  .card {
+    padding: var(--spacing-xl);
+  }
+  
+  /* 그리드 시스템 */
+  .grid-cols-2 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .grid-cols-3 {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  
+  .grid-cols-4 {
+    grid-template-columns: repeat(4, 1fr);
+  }
+  
+  /* 플렉스 시스템 */
+  .flex-row-lg {
+    flex-direction: row;
+  }
+  
+  /* 텍스트 크기 */
+  .text-3xl {
+    font-size: var(--text-3xl);
+  }
+  
+  /* 간격 */
+  .gap-xl {
+    gap: var(--spacing-xl);
+  }
+  
+  /* 인증 컨테이너 */
+  .auth-container {
+    top: var(--spacing-md);
+    right: var(--spacing-md);
+  }
+  
+  /* 모달 조정 */
+  .modal-content {
+    width: auto;
+    max-width: 600px;
+  }
+  
+  /* 체크박스/라디오 그룹 */
+  .checkbox-group,
+  .radio-group {
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+}
+
+/* 대형 화면 스타일 */
+@media (min-width: 1200px) {
+  .container {
+    padding: 0 var(--spacing-xl);
+  }
+  
+  .card {
+    padding: var(--spacing-xl);
+  }
+  
+  /* 그리드 시스템 */
+  .grid-cols-5 {
+    grid-template-columns: repeat(5, 1fr);
+  }
+  
+  .grid-cols-6 {
+    grid-template-columns: repeat(6, 1fr);
+  }
+  
+  /* 텍스트 크기 */
+  .text-4xl {
+    font-size: 36px;
+  }
+  
+  .text-3xl {
+    font-size: var(--text-3xl);
+  }
+  
+  /* 간격 */
+  .gap-2xl {
+    gap: 48px;
+  }
+  
+  .gap-xl {
+    gap: var(--spacing-xl);
+  }
+}
+
+/* 가로 모드 모바일 */
+@media (max-width: 768px) and (orientation: landscape) {
+  .modal-content {
+    max-height: 90vh;
+    overflow-y: auto;
+  }
+  
+  .card {
+    max-height: 90vh;
+    overflow-y: auto;
+  }
+  
+  .wrap {
+    padding: var(--spacing-sm);
+  }
+}
+
+/* 고해상도 디스플레이 */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  /* 고해상도 디스플레이용 최적화 */
+  .card {
+    box-shadow: var(--shadow-xl), inset 0 1px 0 #ffffff0f;
+  }
+  
+  .btn {
+    border-width: 0.5px;
+  }
+}
+
+/* 다크 모드 지원 */
+@media (prefers-color-scheme: dark) {
+  /* 다크 모드가 기본인 경우 추가 스타일 */
+  body {
+    background: radial-gradient(1200px 800px at 70% -10%, #1e293b55, transparent), var(--bg);
+  }
+}
+
+/* 모션 감소 설정 */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  
+  .loading {
+    animation: none;
+  }
+  
+  .modal-content {
+    animation: none;
+  }
+}
+
+/* 인쇄 스타일 */
+@media print {
+  .auth-container,
+  .modal,
+  .btn {
+    display: none !important;
+  }
+  
+  .card {
+    box-shadow: none;
+    border: 1px solid #ccc;
+  }
+  
+  body {
+    background: white;
+    color: black;
+  }
+  
+  .text-primary,
+  .text-success,
+  .text-error {
+    color: black !important;
+  }
+}
+
+/* 접근성 개선 */
+@media (prefers-contrast: high) {
+  :root {
+    --border: #ffffff;
+    --text: #ffffff;
+    --muted: #cccccc;
+  }
+  
+  .btn {
+    border-width: 2px;
+  }
+  
+  input:focus,
+  select:focus,
+  textarea:focus {
+    outline: 3px solid var(--primary);
+    outline-offset: 2px;
+  }
+}
+
+/* 포커스 표시기 */
+@media (prefers-reduced-motion: no-preference) {
+  .btn:focus-visible,
+  input:focus-visible,
+  select:focus-visible,
+  textarea:focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: 2px;
+  }
+}

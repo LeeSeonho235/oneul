@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>찜한 레시피 - 맛있는 추천</title>
+    <meta name="description" content="내가 찜한 레시피 목록을 확인하세요">
+    
+    <!-- CSS 파일들 -->
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/forms.css">
+    <link rel="stylesheet" href="css/auth.css">
+    <link rel="stylesheet" href="css/responsive.css">
+    
+    <!-- 찜한 레시피 페이지 전용 스타일 -->
+    <style>
+        .favorites-page {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        
+        .page-header {
+            text-align: center;
+            margin-bottom: var(--spacing-xl);
+            padding-bottom: var(--spacing-lg);
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .page-header h1 {
+            font-size: var(--text-3xl);
+            margin-bottom: var(--spacing-sm);
+            color: var(--text);
+        }
+        
+        .page-header p {
+            color: var(--muted);
+            font-size: var(--text-lg);
+        }
+        
+        .favorites-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: var(--spacing-lg);
+        }
+        
+        .favorite-card {
+            background: linear-gradient(180deg, #111827, #0b1220);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: var(--spacing-lg);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .favorite-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-xl);
+            border-color: var(--primary);
+        }
+        
+        .favorite-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: var(--spacing-md);
+        }
+        
+        .favorite-header h3 {
+            margin: 0;
+            color: var(--text);
+            font-size: var(--text-lg);
+            flex: 1;
+        }
+        
+        .favorite-category {
+            background: var(--primary);
+            color: white;
+            padding: var(--spacing-xs) var(--spacing-sm);
+            border-radius: 12px;
+            font-size: var(--text-xs);
+            font-weight: 600;
+            margin-left: var(--spacing-sm);
+        }
+        
+        .favorite-nutrition {
+            display: flex;
+            flex-wrap: wrap;
+            gap: var(--spacing-sm);
+            margin-bottom: var(--spacing-md);
+            padding: var(--spacing-sm);
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+        }
+        
+        .nutrition-item {
+            background: rgba(16, 185, 129, 0.2);
+            color: var(--success);
+            padding: var(--spacing-xs) var(--spacing-sm);
+            border-radius: 12px;
+            font-size: var(--text-xs);
+            font-weight: 500;
+            border: 1px solid rgba(16, 185, 129, 0.3);
+        }
+        
+        .favorite-actions {
+            display: flex;
+            gap: var(--spacing-sm);
+        }
+        
+        .favorite-actions .btn {
+            flex: 1;
+            font-size: var(--text-sm);
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: var(--spacing-xl);
+            color: var(--muted);
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            border: 2px dashed var(--border);
+        }
+        
+        .empty-state h2 {
+            margin-bottom: var(--spacing-md);
+            color: var(--text);
+            font-size: var(--text-xl);
+        }
+        
+        .empty-state p {
+            margin-bottom: var(--spacing-lg);
+            font-size: var(--text-base);
+        }
+        
+        .empty-state .btn {
+            font-size: var(--text-base);
+            padding: var(--spacing-md) var(--spacing-lg);
+        }
+        
+        .favorites-stats {
+            background: rgba(59, 130, 246, 0.1);
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            border-radius: 12px;
+            padding: var(--spacing-lg);
+            margin-bottom: var(--spacing-xl);
+            text-align: center;
+        }
+        
+        .favorites-stats h3 {
+            color: var(--primary);
+            margin-bottom: var(--spacing-sm);
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: var(--spacing-md);
+            margin-top: var(--spacing-md);
+        }
+        
+        .stat-item {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            padding: var(--spacing-sm);
+        }
+        
+        .stat-value {
+            font-size: var(--text-xl);
+            font-weight: 700;
+            color: var(--primary);
+            display: block;
+        }
+        
+        .stat-label {
+            font-size: var(--text-sm);
+            color: var(--muted);
+        }
+        
+        @media (max-width: 768px) {
+            .page-header h1 {
+                font-size: var(--text-2xl);
+            }
+            
+            .favorites-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .favorite-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: var(--spacing-sm);
+            }
+            
+            .favorite-category {
+                margin-left: 0;
+            }
+            
+            .favorite-actions {
+                flex-direction: column;
+            }
+            
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .favorite-nutrition {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 인증 컨테이너 -->
+    <div class="auth-container">
+        <!-- 로그인 전: 로그인/회원가입 버튼 -->
+        <div id="loginButtons">
+            <button class="auth-btn" onclick="showLogin()">로그인</button>
+            <button class="auth-btn primary" onclick="showSignup()">회원가입</button>
+        </div>
+        
+        <!-- 로그인 후: 사용자 이름과 로그아웃 버튼 -->
+        <div id="userInfo" style="display: none;">
+            <div class="user-name" id="userName"></div>
+            <button class="auth-btn" onclick="logout()">로그아웃</button>
+        </div>
+    </div>
+
+    <main class="wrap">
+        <div class="container">
+            <div class="favorites-page">
+                <!-- 페이지 헤더 -->
+                <div class="page-header">
+                    <h1>❤️ 찜한 레시피</h1>
+                    <p>내가 저장한 맛있는 레시피들을 확인해보세요</p>
+                </div>
+
+                <!-- 통계 정보 -->
+                <div class="favorites-stats" id="favoritesStats" style="display: none;">
+                    <h3>나의 찜한 레시피 통계</h3>
+                    <div class="stats-grid">
+                        <div class="stat-item">
+                            <span class="stat-value" id="totalFavorites">0</span>
+                            <span class="stat-label">총 찜한 레시피</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-value" id="koreanCount">0</span>
+                            <span class="stat-label">한식</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-value" id="chineseCount">0</span>
+                            <span class="stat-label">중식</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-value" id="japaneseCount">0</span>
+                            <span class="stat-label">일식</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-value" id="westernCount">0</span>
+                            <span class="stat-label">양식</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 찜한 레시피 목록 -->
+                <div id="favoritesContainer">
+                    <!-- 찜한 레시피 목록이 여기에 동적으로 로드됩니다 -->
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- 로그인 모달 -->
+    <div id="loginModal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">로그인</h2>
+                <button class="modal-close" onclick="closeLogin()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="loginForm" class="form-container">
+                    <div class="form-group">
+                        <label for="loginUsername">아이디</label>
+                        <input type="text" id="loginUsername" name="username" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="loginPassword">비밀번호</label>
+                        <input type="password" id="loginPassword" name="password" required>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" onclick="closeLogin()">취소</button>
+                <button class="btn btn-primary" type="submit" form="loginForm">로그인</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 회원가입 모달 -->
+    <div id="signupModal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">회원가입</h2>
+                <button class="modal-close" onclick="closeSignup()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="signupForm" class="form-container">
+                    <!-- 기본 정보 -->
+                    <div class="form-group">
+                        <label for="username">아이디 <span class="required">*</span></label>
+                        <input type="text" id="username" name="username" 
+                               placeholder="영문, 숫자, 언더스코어 4-20자" required>
+                        <div id="usernameMessage" class="validation-message"></div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="password">비밀번호 <span class="required">*</span></label>
+                        <input type="password" id="password" name="password" 
+                               placeholder="8자 이상, 영문+숫자+특수문자" required>
+                        <div id="passwordStrength" class="password-strength"></div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="passwordConfirm">비밀번호 확인 <span class="required">*</span></label>
+                        <input type="password" id="passwordConfirm" name="passwordConfirm" 
+                               placeholder="비밀번호를 다시 입력하세요" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="email">이메일 <span class="required">*</span></label>
+                        <input type="email" id="email" name="email" 
+                               placeholder="example@email.com" required>
+                        <div id="emailMessage" class="validation-message"></div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="name">이름 <span class="required">*</span></label>
+                        <input type="text" id="name" name="name" placeholder="홍길동" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="birthDate">생년월일 <span class="required">*</span></label>
+                        <input type="date" id="birthDate" name="birthDate" required>
+                    </div>
+                    
+                    <!-- 성별 선택 -->
+                    <div class="form-group">
+                        <label>성별 <span class="required">*</span></label>
+                        <div class="radio-group">
+                            <div class="radio-item">
+                                <input id="male" name="gender" type="radio" value="male" required>
+                                <label for="male">남성</label>
+                            </div>
+                            <div class="radio-item">
+                                <input id="female" name="gender" type="radio" value="female" required>
+                                <label for="female">여성</label>
+                            </div>
+                            <div class="radio-item">
+                                <input id="other" name="gender" type="radio" value="other" required>
+                                <label for="other">기타</label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 국적 선택 -->
+                    <div class="form-group">
+                        <label>국적 <span class="required">*</span></label>
+                        <div class="radio-group">
+                            <div class="radio-item">
+                                <input id="korean" name="nationality" type="radio" value="korean" required>
+                                <label for="korean">내국인</label>
+                            </div>
+                            <div class="radio-item">
+                                <input id="foreigner" name="nationality" type="radio" value="foreigner" required>
+                                <label for="foreigner">외국인</label>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" onclick="closeSignup()">취소</button>
+                <button class="btn btn-primary" type="submit" form="signupForm">회원가입</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript 파일들 -->
+    <script src="js/utils.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/main.js"></script>
+    
+    <!-- 찜한 레시피 페이지 전용 스크립트 -->
+    <script>
+        // 찜한 레시피 페이지 초기화
+        document.addEventListener('DOMContentLoaded', function() {
+            if (app.getCurrentPage() === 'favorites') {
+                app.initializeFavoritesPage();
+                updateFavoritesStats();
+            }
+        });
+
+        // 찜한 레시피 통계 업데이트
+        function updateFavoritesStats() {
+            const currentUser = API.user.getCurrentUser();
+            if (!currentUser) return;
+
+            const favorites = API.favorites.getFavorites(currentUser.id);
+            const statsElement = document.getElementById('favoritesStats');
+            
+            if (favorites.length > 0) {
+                statsElement.style.display = 'block';
+                
+                // 카테고리별 통계 계산
+                const categoryStats = {};
+                favorites.forEach(recipe => {
+                    categoryStats[recipe.category] = (categoryStats[recipe.category] || 0) + 1;
+                });
+                
+                // 통계 업데이트
+                document.getElementById('totalFavorites').textContent = favorites.length;
+                document.getElementById('koreanCount').textContent = categoryStats.korean || 0;
+                document.getElementById('chineseCount').textContent = categoryStats.chinese || 0;
+                document.getElementById('japaneseCount').textContent = categoryStats.japanese || 0;
+                document.getElementById('westernCount').textContent = categoryStats.western || 0;
+            } else {
+                statsElement.style.display = 'none';
+            }
+        }
+
+        // 찜하기 토글 (찜한 레시피 페이지용)
+        document.addEventListener('click', function(e) {
+            if (e.target.classList.contains('favorite-btn') && app.getCurrentPage() === 'favorites') {
+                const recipeId = e.target.dataset.recipeId;
+                const currentUser = API.user.getCurrentUser();
+                
+                if (currentUser) {
+                    API.favorites.removeFromFavorites(currentUser.id, recipeId);
+                    Notification.success('찜 목록에서 제거되었습니다.');
+                    
+                    // 페이지 새로고침
+                    setTimeout(() => {
+                        app.initializeFavoritesPage();
+                        updateFavoritesStats();
+                    }, 1000);
+                }
+            }
+        });
+    </script>
+</body>
+</html>
